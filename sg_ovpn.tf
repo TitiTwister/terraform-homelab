@@ -33,6 +33,17 @@ resource "outscale_security_group_rule" "ovpn_ovpn_protocol" {
   }
 }
 
+resource "outscale_security_group_rule" "ovpn_wg_protocol" {
+  flow              = "Inbound"
+  security_group_id = outscale_security_group.sg_ovpn.security_group_id
+  rules {
+    from_port_range = "51820"
+    to_port_range   = "51820"
+    ip_protocol     = "udp"
+    ip_ranges       = var.allowed_cidr
+  }
+}
+
 resource "outscale_security_group_rule" "ovpn_node_exporter" {
   flow              = "Inbound"
   security_group_id = outscale_security_group.sg_ovpn.security_group_id
