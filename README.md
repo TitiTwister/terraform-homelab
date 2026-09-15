@@ -21,7 +21,7 @@ Terraform project deploying a homelab VPC infrastructure on Outscale cloud (eu-w
         |  |   10.0.0.0/24            |  |   10.0.100.0/24          |  | 10.0.8.0/24   |
         |  |                          |  |                          |  |               |
         |  |  └──------------------+  |  |  └──----------------+    |  |  └──--------+ |
-        |  |  | OpenVPN Server     |  |  |  | DNS (NS)         |    |  |  | K8s      | |
+        |  |  | OpenVPN/WireGuard   |  |  |  | DNS (NS)         |    |  |  | K8s      | |
         |  |  | 10.0.0.254         |  |  |  | 10.0.100.11/12   |    |  |  |Controller| |
         |  |  └──------------------+  |  |  └──----------------+    |  |  | 10.0.8.10| |
         |  |                          |  |                          |  |  └──--------+ |
@@ -35,14 +35,18 @@ Terraform project deploying a homelab VPC infrastructure on Outscale cloud (eu-w
         |  |  | 10.0.0.253         |  |  |  | 10.0.100.22      |    |  |  | Workers  | |
         |  |  └──------------------+  |  |  └──----------------+    |  |  |          | |
         |  |                          |  |                          |  |  └──--------+ |
-        |  |  └──------------------+  |  |  └──----------------+    |  |  └──--------+ |
-        |  |  | WireGuard          |  |  |  | Loki             |    |  |  |PostgreSQL| |
-        |  |  | 10.0.0.250         |  |  |  | 10.0.100.23      |    |  |  | 10.0.8.4 | |
-        |  |  └──------------------+  |  |  └──----------------+    |  |  └──--------+ |
+        |  |                          |  |  └──----------------+    |  |  └──--------+ |
+        |  |                          |  |  | Loki             |    |  |  |PostgreSQL| |
+        |  |                          |  |  | 10.0.100.23      |    |  |  | 10.0.8.4 | |
+        |  |                          |  |  └──----------------+    |  |  └──--------+ |
         |  |                          |  |  └──----------------+    |  |  └──--------+ |
         |  |                          |  |  | CA Issuer        |    |  |  | MetalLB  | |
         |  |                          |  |  | 10.0.100.5       |    |  |  | Parking  | |
         |  |                          |  |  └──----------------+    |  |  |10.0.8.230| |
+        |  |                          |  |  └──----------------+    |  |               |
+        |  |                          |  |  | HAProxy Int      |    |  |               |
+        |  |                          |  |  | 10.0.100.200     |    |  |               |
+        |  |                          |  |  └──----------------+    |  |               |
         |  |                          |  |                          |  |  └──--------+ |
         |  └──------------------------+  └──------------------------+  └──-------------+
         |              |                              |                    |
@@ -73,12 +77,12 @@ Terraform project deploying a homelab VPC infrastructure on Outscale cloud (eu-w
 ├── rt.tf                    # Route tables
 ├── sg_cold_vault.tf         # Security group for Cold Vault
 ├── sg_haproxy.tf            # Security group for HAProxy
+├── sg_haproxy_int.tf        # Security group for internal HAProxy
 ├── sg_k8s.tf                # Security group for Kubernetes nodes
 ├── sg_ovpn.tf               # Security group for OpenVPN
 ├── sg_tools.tf              # Security group for tools
-├── sg_wireguard.tf          # Security group for WireGuard
 ├── vms_grafana.tf           # Grafana VM
-├── vms_haproxy.tf           # HAProxy VM
+├── vms_haproxy.tf           # HAProxy VMs (external + internal)
 ├── vms_k8s_controller.tf    # Kubernetes controller VM
 ├── vms_k8s_master.tf        # Kubernetes master nodes
 ├── vms_k8s_worker.tf        # Kubernetes worker nodes (+ data disks)
@@ -89,7 +93,6 @@ Terraform project deploying a homelab VPC infrastructure on Outscale cloud (eu-w
 ├── vms_pki.tf               # Cold Vault and CA issuer VMs (+ data disks)
 ├── vms_postgresql.tf        # PostgreSQL VMs (+ data disks)
 ├── vms_prometheus.tf        # Prometheus VMs (+ data disks)
-├── vms_wireguard.tf         # WireGuard VM
 ├── variables.tf             # Variable definitions
 ├── output.tf                # Output definitions
 ├── providers.tf             # Provider configuration + S3 state backend
@@ -140,7 +143,6 @@ for them, or pass them via `-backend-config`.
 | Output | Description |
 |--------|-------------|
 | `ovpn_ip_addr` | Public IP address of the OpenVPN server |
-| `wireguard_ip_addr` | Public IP address of the WireGuard server |
 | `cold_vault_ip_addr` | Public IP address of the Cold Vault server |
 | `haproxy_ip_addr` | Public IP address of the HAProxy server |
 
@@ -156,14 +158,14 @@ for them, or pass them via `-backend-config`.
 
 | Role | Subnet | Private IP(s) | VM Type | Notes |
 |------|--------|---------------|---------|-------|
-| OpenVPN | DMZ | 10.0.0.254 | `casual_vm_type` | Public IP attached |
+| OpenVPN + WireGuard | DMZ | 10.0.0.254 | `casual_vm_type` | Public IP attached; hosts both OpenVPN and WireGuard |
 | HAProxy | DMZ | 10.0.0.200 | `casual_vm_type` | Public IP attached |
 | Cold Vault | DMZ | 10.0.0.253 | `casual_vm_type` | 50 GB `io1` data disk, public IP attached |
-| WireGuard | DMZ | 10.0.0.250 | `casual_vm_type` | Public IP attached |
 | DNS (NS) | Tools | 10.0.100.11, 10.0.100.12 | `casual_vm_type` | Pair of name servers |
 | Prometheus | Tools | 10.0.100.20, 10.0.100.21 | `casual_vm_type` | 50 GB `io1` data disk |
 | Grafana | Tools | 10.0.100.22 | `casual_vm_type` | Monitoring dashboard |
 | Loki | Tools | 10.0.100.23 | `casual_vm_type` | 50 GB `gp2` data disk |
+| HAProxy (internal) | Tools | 10.0.100.200 | `casual_vm_type` | Private reverse proxy (VPN-only, no public IP) |
 | CA Issuer | Tools | 10.0.100.5 | `casual_vm_type` | 50 GB `io1` data disk |
 | PostgreSQL | K8s | 10.0.8.4, 10.0.8.5, 10.0.8.6 | `medium_vm_type` | 200 GB `io1` data disk each |
 | K8s Controller | K8s | 10.0.8.10 | `small_vm_type` | Smallest VM size |

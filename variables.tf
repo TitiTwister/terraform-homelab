@@ -61,12 +61,6 @@ variable "ovpn_ip" {
   default     = "10.0.0.254"
 }
 
-variable "wireguard_ip" {
-  description = "Private ip for Wireguard VM"
-  type        = string
-  default     = "10.0.0.250"
-}
-
 variable "cold_vault_ip" {
   description = "Private ip for OpenVPN VM"
   type        = string
@@ -77,6 +71,12 @@ variable "haproxy_ip" {
   description = "Private ip for HAPROXY DMZ VM"
   type        = string
   default     = "10.0.0.200"
+}
+
+variable "haproxy_int_ip" {
+  description = "Private ip for internal HAPROXY VM"
+  type        = string
+  default     = "10.0.100.200"
 }
 
 variable "ns_ips" {
@@ -131,6 +131,12 @@ variable "medium_vm_type" {
   description = "VM type for medium usage"
   type        = string
   default     = "tinav7.c4r16p2"
+}
+
+variable "gpu_vm_type" {
+  description = "VM type for L40 GPU VM (must be v7 generation with p1 performance flag for the nvidia-l40 fGPU)"
+  type        = string
+  default     = "tinav7.c16r64p1"
 }
 
 variable "dmz_vpn_key" {}
@@ -237,5 +243,23 @@ variable "loki_volume_size" {
   description = "Size in GB for k8s worker data volumes"
   type        = number
   default     = 50
+}
+
+variable "gpu_1_ip" {
+  description = "Private ip for GPU VM"
+  type        = string
+  default     = "10.0.100.40"
+}
+
+variable "gpu_1_volume_size" {
+  description = "Size in GB for GPU VM data volume"
+  type        = number
+  default     = 1000
+}
+
+variable "gpu_1_volume_iops" {
+  description = "IOPS for GPU VM io1 volume"
+  type        = number
+  default     = 13000
 }
 

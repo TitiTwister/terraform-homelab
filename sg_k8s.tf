@@ -41,7 +41,7 @@ resource "outscale_security_group_rule" "k8s_kapi" {
     from_port_range = "6443"
     to_port_range   = "6443"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
   }
 }
 
@@ -96,7 +96,7 @@ resource "outscale_security_group_rule" "forgejo_ssh" {
     from_port_range = "22"
     to_port_range   = "22"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
   }
 }
 
@@ -107,7 +107,7 @@ resource "outscale_security_group_rule" "postgresql_postgre" {
     from_port_range = "5432"
     to_port_range   = "5433"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
   }
 }
 
@@ -118,7 +118,7 @@ resource "outscale_security_group_rule" "postgresql_patroni" {
     from_port_range = "8008"
     to_port_range   = "8008"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32","${var.prometheus_ip[0]}/32", "${var.prometheus_ip[1]}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32","${var.haproxy_int_ip}/32", "${var.prometheus_ip[0]}/32", "${var.prometheus_ip[1]}/32"]
   }
 }
 resource "outscale_security_group_rule" "postgresql_exporter" {
@@ -172,7 +172,7 @@ resource "outscale_security_group_rule" "k8s_http" {
     from_port_range = "80"
     to_port_range   = "80"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
   }
 }
 
@@ -183,7 +183,7 @@ resource "outscale_security_group_rule" "k8s_https" {
     from_port_range = "443"
     to_port_range   = "443"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
   }
 }
 
@@ -194,6 +194,6 @@ resource "outscale_security_group_rule" "k8s_nodeports" {
     from_port_range = "30800"
     to_port_range   = "32767"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
   }
 }

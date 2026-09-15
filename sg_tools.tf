@@ -41,7 +41,7 @@ resource "outscale_security_group_rule" "tools_grafana" {
     from_port_range = "3000"
     to_port_range   = "3000"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
   }
 }
 
@@ -52,7 +52,7 @@ resource "outscale_security_group_rule" "tools_prometheus" {
     from_port_range = "9090"
     to_port_range   = "9090"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
   }
 }
 
@@ -63,7 +63,7 @@ resource "outscale_security_group_rule" "tools_alertmanager" {
     from_port_range = "9093"
     to_port_range   = "9093"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_ip}/32"]
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
   }
 }
 

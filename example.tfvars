@@ -31,14 +31,15 @@ k8s_subnet   = "10.0.8.0/24"
 
 # Static private IPs (see variables.tf for defaults)
 ovpn_ip       = "10.0.0.254"
-wireguard_ip  = "10.0.0.250"
 cold_vault_ip = "10.0.0.253"
 haproxy_ip    = "10.0.0.200"
+haproxy_int_ip = "10.0.100.200"
 ns_ips        = ["10.0.100.11", "10.0.100.12"]
 prometheus_ip = ["10.0.100.20", "10.0.100.21"]
 grafana_ip    = "10.0.100.22"
 loki_ip       = "10.0.100.23"
 ca_1_ip       = "10.0.100.5"
+gpu_1_ip      = "10.0.100.40"
 
 postgresql_ips                = ["10.0.8.4", "10.0.8.5", "10.0.8.6"]
 k8s_master_ips                = ["10.0.8.11", "10.0.8.12", "10.0.8.13"]
