@@ -51,7 +51,7 @@ resource "outscale_security_group_rule" "haproxy_int_sshssh" {
     from_port_range = "2222"
     to_port_range   = "2222"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.ovpn_ip}/32"]
+    ip_ranges       = ["${var.ovpn_ip}/32","${var.k8s_subnet}"]
   }
 }
 
