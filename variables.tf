@@ -109,6 +109,18 @@ variable "loki_ip" {
   default     = "10.0.100.23"
 }
 
+variable "dev_1_ip" {
+  description = "Private ip for DEV VM"
+  type        = string
+  default     = "10.0.100.24"
+}
+
+variable "ci_1_ip" {
+  description = "Private ip for CI VM"
+  type        = string
+  default     = "10.0.100.25"
+}
+
 variable "rocky_10_ami" {
   description = "AMI id for rocky 10 image"
   type        = string
@@ -134,9 +146,9 @@ variable "medium_vm_type" {
 }
 
 variable "gpu_vm_type" {
-  description = "VM type for L40 GPU VM (must be v7 generation with p1 performance flag for the nvidia-l40 fGPU)"
+  description = "VM type for V100 GPU VM (must be v5 generation with p1 performance flag for the nvidia-v100 fGPU)"
   type        = string
-  default     = "tinav7.c16r64p1"
+  default     = "tinav5.c16r64p1"
 }
 
 variable "dmz_vpn_key" {}
@@ -245,6 +257,12 @@ variable "loki_volume_size" {
   default     = 50
 }
 
+variable "ci_1_volume_size" {
+  description = "Size in GB for CI data volume"
+  type        = number
+  default     = 50
+}
+
 variable "gpu_1_ip" {
   description = "Private ip for GPU VM"
   type        = string
@@ -259,6 +277,30 @@ variable "gpu_1_volume_size" {
 
 variable "gpu_1_volume_iops" {
   description = "IOPS for GPU VM io1 volume"
+  type        = number
+  default     = 13000
+}
+
+variable "gpu_2_ip" {
+  description = "Private ip for H100 GPU VM"
+  type        = string
+  default     = "10.0.100.41"
+}
+
+variable "gpu_2_vm_type" {
+  description = "VM type for H100 GPU VM (must be v7 generation with p1 performance flag for the nvidia-h100 fGPU)"
+  type        = string
+  default     = "tinav7.c16r64p1"
+}
+
+variable "gpu_2_volume_size" {
+  description = "Size in GB for H100 GPU VM data volume"
+  type        = number
+  default     = 1000
+}
+
+variable "gpu_2_volume_iops" {
+  description = "IOPS for H100 GPU VM io1 volume"
   type        = number
   default     = 13000
 }
