@@ -86,3 +86,13 @@ resource "outscale_security_group_rule" "tools_promtail" {
     ip_ranges       = ["10.111.0.0/16"]
   }
 }
+
+resource "outscale_security_group_rule" "tools_http" {
+  flow              = "Inbound"
+  security_group_id = outscale_security_group.sg_tools.security_group_id
+  rules {
+    from_port_range = "8188"
+    to_port_range   = "8188"
+    ip_ranges       = ["${var.ovpn_ip}/32"]
+  }
+}

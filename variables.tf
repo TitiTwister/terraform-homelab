@@ -109,18 +109,6 @@ variable "loki_ip" {
   default     = "10.0.100.23"
 }
 
-variable "dev_1_ip" {
-  description = "Private ip for DEV VM"
-  type        = string
-  default     = "10.0.100.24"
-}
-
-variable "ci_1_ip" {
-  description = "Private ip for CI VM"
-  type        = string
-  default     = "10.0.100.25"
-}
-
 variable "rocky_10_ami" {
   description = "AMI id for rocky 10 image"
   type        = string
@@ -253,12 +241,6 @@ variable "k8s_worker_volume_data_size" {
 
 variable "loki_volume_size" {
   description = "Size in GB for k8s worker data volumes"
-  type        = number
-  default     = 50
-}
-
-variable "ci_1_volume_size" {
-  description = "Size in GB for CI data volume"
   type        = number
   default     = 50
 }

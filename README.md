@@ -167,8 +167,6 @@ for them, or pass them via `-backend-config`.
 | Loki | Tools | 10.0.100.23 | `casual_vm_type` | 50 GB `gp2` data disk |
 | HAProxy (internal) | Tools | 10.0.100.200 | `casual_vm_type` | Private reverse proxy (VPN-only, no public IP) |
 | CA Issuer | Tools | 10.0.100.5 | `casual_vm_type` | 50 GB `io1` data disk |
-| Dev | Tools | 10.0.100.24 | `casual_vm_type` | General purpose dev VM |
-| CI | Tools | 10.0.100.25 | `casual_vm_type` | 50 GB `gp2` data disk |
 | PostgreSQL | K8s | 10.0.8.4, 10.0.8.5, 10.0.8.6 | `medium_vm_type` | 200 GB `io1` data disk each |
 | K8s Controller | K8s | 10.0.8.10 | `small_vm_type` | Smallest VM size |
 | K8s Masters | K8s | 10.0.8.11, 10.0.8.12, 10.0.8.13 | `casual_vm_type` | Kubernetes control plane |
