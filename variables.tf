@@ -50,6 +50,12 @@ variable "k8s_subnet" {
   default     = "10.0.8.0/24"
 }
 
+variable "remote_home_subnet" {
+  description = "Home LAN subnet CIDR, reached via the site-to-site tunnel on the ovpn VM"
+  type        = string
+  default     = "192.168.10.0/24"
+}
+
 variable "allowed_cidr" {
   description = "List of all IP allowed to SSH OpenVPN VM"
   type        = list(string)
