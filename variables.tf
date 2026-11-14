@@ -115,6 +115,12 @@ variable "loki_ip" {
   default     = "10.0.100.23"
 }
 
+variable "netbox_ip" {
+  description = "Private ip for NETBOX VM"
+  type        = string
+  default     = "10.0.100.24"
+}
+
 variable "rocky_10_ami" {
   description = "AMI id for rocky 10 image"
   type        = string
@@ -247,6 +253,12 @@ variable "k8s_worker_volume_data_size" {
 
 variable "loki_volume_size" {
   description = "Size in GB for k8s worker data volumes"
+  type        = number
+  default     = 50
+}
+
+variable "netbox_volume_size" {
+  description = "Size in GB for netbox data volume"
   type        = number
   default     = 50
 }
