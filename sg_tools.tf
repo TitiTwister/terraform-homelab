@@ -67,6 +67,18 @@ resource "outscale_security_group_rule" "tools_alertmanager" {
   }
 }
 
+# NetBox port redirection from HAPROXY
+resource "outscale_security_group_rule" "tools_netbox" {
+  flow              = "Inbound"
+  security_group_id = outscale_security_group.sg_tools.security_group_id
+  rules {
+    from_port_range = "8000"
+    to_port_range   = "8000"
+    ip_protocol     = "tcp"
+    ip_ranges       = ["${var.haproxy_ip}/32", "${var.haproxy_int_ip}/32"]
+  }
+}
+
 resource "outscale_security_group_rule" "tools_dns" {
   flow              = "Inbound"
   security_group_id = outscale_security_group.sg_tools.security_group_id
