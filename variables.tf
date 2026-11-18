@@ -121,6 +121,12 @@ variable "netbox_ip" {
   default     = "10.0.100.24"
 }
 
+variable "webui_ip" {
+  description = "Private ip for Open WebUI VM"
+  type        = string
+  default     = "10.0.100.25"
+}
+
 variable "rocky_10_ami" {
   description = "AMI id for rocky 10 image"
   type        = string
@@ -259,6 +265,12 @@ variable "loki_volume_size" {
 
 variable "netbox_volume_size" {
   description = "Size in GB for netbox data volume"
+  type        = number
+  default     = 50
+}
+
+variable "webui_volume_size" {
+  description = "Size in GB for Open WebUI data volume"
   type        = number
   default     = 50
 }
