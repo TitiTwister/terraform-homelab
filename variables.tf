@@ -56,6 +56,11 @@ variable "remote_home_subnet" {
   default     = "192.168.10.0/24"
 }
 
+variable "remote_wg_subnet" {
+  description = "Remote host on the WireGuard VPN"
+  type        = string
+  default     = "10.0.201.254"
+}
 variable "allowed_cidr" {
   description = "List of all IP allowed to SSH OpenVPN VM"
   type        = list(string)

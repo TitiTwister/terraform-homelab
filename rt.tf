@@ -42,6 +42,12 @@ resource "outscale_route" "home_lan_tools" {
     route_table_id       = outscale_route_table.rtb_tools.route_table_id
 }
 
+resource "outscale_route" "home_wg_tools" {
+    destination_ip_range = var.remote_wg_subnet
+    nic_id               = outscale_nic.ovpn_nic.nic_id
+    route_table_id       = outscale_route_table.rtb_tools.route_table_id
+}
+
 ################################################
 ###################### K8S #####################
 ################################################
