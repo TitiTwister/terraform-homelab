@@ -73,6 +73,6 @@ resource "outscale_security_group_rule" "ovpn_transit_openwebui" {
     from_port_range = "8000"
     to_port_range   = "8000"
     ip_protocol     = "tcp"
-    ip_ranges       = ["${var.haproxy_int_ip}/32"]
+    ip_ranges       = ["${var.webui_ip}/32"]
   }
 }
